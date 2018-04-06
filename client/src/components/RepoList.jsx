@@ -1,4 +1,5 @@
 import React from 'react';
+import RepoRow from './RepoRow.jsx';
 
 const RepoList = ({repos}) => (
   <div>
@@ -23,18 +24,3 @@ const RepoList = ({repos}) => (
 
 export default RepoList;
 
-const RepoRow = ({repo}) => {
-
-  return (
-
-    <tr>
-      <td><a href={repo.url}>{repo.repoName}</a></td>
-      <td>{repo.userName}</td>
-      <td>{repo.watchers}</td>
-    </tr>
-
-
-  )
-
-
-}
