@@ -18,7 +18,7 @@ class App extends React.Component {
 
     let data = {term: term};
 
-    fetch('http://localhost:1128/repos', {
+    fetch('/repos', {
       body: JSON.stringify(data), // must match 'Content-Type' header
       headers: {
         'content-type': 'application/json'
@@ -37,7 +37,7 @@ class App extends React.Component {
 
   getRepos(){
 
-    fetch('http://localhost:1128/repos')
+    fetch('/repos')
     .then(response => response.json())
     .then(
       (repos) => {
@@ -58,7 +58,7 @@ class App extends React.Component {
 
   render () {
     return (<div>
-      <h1>Github Fetcher</h1>
+      <h1>Jenn's Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>
       <Search onSearch={this.search.bind(this)}/>
     </div>)
