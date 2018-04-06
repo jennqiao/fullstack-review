@@ -25,7 +25,9 @@ class App extends React.Component {
       },
       method: 'POST'
     })
-    .then(response => console.log(response));
+    .then(response => {
+      this.getRepos();
+    });
   }
 
   componentDidMount(){
