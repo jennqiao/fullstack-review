@@ -60,6 +60,22 @@ let save = (repos) => {
 
 }
 
+let getRepos = (callback) => {
+
+  Repo.find().limit(25).sort({watchers: -1}).exec((err, repos)=> {
+    if (err) {
+      console.log('error in db', err);
+      callback(err, null);
+    } else {
+      console.log('here are the top 25 repos', repos);
+      callback(null, repos);
+    }
+  })
+  
+
+}
+
+// getRepos();
 
 
 var exampleRepo = 
@@ -176,3 +192,4 @@ var exampleRepo =
 
 
 module.exports.save = save;
+module.exports.getRepos = getRepos;

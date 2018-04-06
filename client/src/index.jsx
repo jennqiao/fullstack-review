@@ -15,7 +15,43 @@ class App extends React.Component {
 
   search (term) {
     console.log(`${term} was searched`);
-    // TODO
+
+    let data = {term: term};
+
+    fetch('http://localhost:1128/repos', {
+      body: JSON.stringify(data), // must match 'Content-Type' header
+      headers: {
+        'content-type': 'application/json'
+      },
+      method: 'POST'
+    })
+    .then(response => console.log(response));
+  }
+
+  componentDidMount(){
+    this.getRepos();
+
+  }
+
+  getRepos(){
+
+    fetch('http://localhost:1128/repos')
+    .then(response => response.json())
+    .then(
+      (repos) => {
+        console.log('success', repos);
+        this.setState({
+          repos: repos
+        })
+
+      },
+
+      (error)=> {
+        console.log('sorry error!', error);
+
+      }
+
+    )
   }
 
   render () {
