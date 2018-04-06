@@ -11,7 +11,6 @@ db.once('open', function() {
 });
 
 let repoSchema = mongoose.Schema({
-  // TODO: your schema here!
   userName: String,
   repoName: String,
   repoID: Number,
@@ -34,25 +33,34 @@ let save = (repos) => {
     //     console.log('added and saved!')
     //   }
     // })
+    let repo = repos[i];
+    let repoObj = {
+        userName: repo.owner.login,
+        repoName: repo.name,
+        repoID: repo.id,
+        url: repo.html_url,
+        watchers: repo.watchers_count,
+        lastUpdated: repo.updated_at
+    }
 
-
-    Repo.findOneAndUpdate({repoID: repos[i].repoID}, repos[i], {upsert: true, new: true}, function(err, repo){
+    Repo.findOneAndUpdate({repoID: repoObj.repoID}, repoObj, {upsert: true, new: true}, function(err, repo){
       if (err) {
         return console.log(err);
       } else {
         console.log('added!', repo);
-        Repo.find(function (err, repos) {
-          if (err) return console.error(err);
-          console.log('here are all the repos!', repos);
-        })
       }
     })
 
   }
  
-
+  Repo.find(function (err, repos) {
+    if (err) return console.error(err);
+    console.log('here are all the repos!', repos);
+  })
 
 }
+
+
 
 var exampleRepo = 
 {
@@ -144,21 +152,26 @@ var exampleRepo =
   "default_branch": "master"
 }
 
-save([{
-  userName: exampleRepo.owner.login,
-  repoName: 'this is updated!!',
-  repoID: exampleRepo.id,
-  url: exampleRepo.html_url,
-  watchers: exampleRepo.watchers_count,
-  lastUpdated: exampleRepo.updated_at
-}, {
-  userName: 'jennqiao',
-  repoName: 'new one',
-  repoID: 8493,
-  url: exampleRepo.html_url,
-  watchers: exampleRepo.watchers_count,
-  lastUpdated: exampleRepo.updated_at
-}])
+// Repo.remove({ }, function (err) {
+//   if (err) return console.log(err);
+//   // removed!
+// });
+
+// save([{
+//   userName: exampleRepo.owner.login,
+//   repoName: 'this is updated!!',
+//   repoID: exampleRepo.id,
+//   url: exampleRepo.html_url,
+//   watchers: exampleRepo.watchers_count,
+//   lastUpdated: exampleRepo.updated_at
+// }, {
+//   userName: 'jennqiao',
+//   repoName: 'new one',
+//   repoID: 8493,
+//   url: exampleRepo.html_url,
+//   watchers: exampleRepo.watchers_count,
+//   lastUpdated: exampleRepo.updated_at
+// }])
 
 
 
