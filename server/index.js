@@ -28,8 +28,9 @@ app.post('/repos', function (req, res) {
       res.status(500);
       res.send(error);
     } else {
-      db.save(results);
-      res.send('Added to database!');
+      db.save(results, (reposAdded, reposUpdated)=> {
+        res.send(JSON.stringify([reposAdded, reposUpdated]));
+      });      
     }
 
   } )

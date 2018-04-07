@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost/fetcher');
 mongoose.connect('mongodb://localhost:27017');
+mongoose.Promise = Promise;  
+
 
 
 var db = mongoose.connection;
@@ -21,42 +23,48 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (repos) => {
+let save = (repos, callback) => {
+
+  //save length of API Repos
+  //get current length of db
+  //once saved new repos, get new length of db
 
   //receive an array of objects
+  let APILength = repos.length;
 
-  for (var i=0; i<repos.length; i++) {
-    // Repo.create(repos[i], function (err, small) {
-    //   if (err) {
-    //     return console.log(err);
-    //   } else {
-    //     console.log('added and saved!')
-    //   }
-    // })
-    let repo = repos[i];
-    let repoObj = {
-        userName: repo.owner.login,
-        repoName: repo.name,
-        repoID: repo.id,
-        url: repo.html_url,
-        watchers: repo.watchers_count,
-        lastUpdated: repo.updated_at
-    }
-
-    Repo.findOneAndUpdate({repoID: repoObj.repoID}, repoObj, {upsert: true, new: true}, function(err, repo){
-      if (err) {
-        return console.log(err);
-      } else {
-        console.log('added!', repo);
+  Repo.count().then((count)=> {
+    console.log('here is the old count', count);
+    let oldSize = count;
+    
+    var promiseArray = [];
+  
+    for (var i=0; i<repos.length; i++) {
+      let repo = repos[i];
+      let repoObj = {
+          userName: repo.owner.login,
+          repoName: repo.name,
+          repoID: repo.id,
+          url: repo.html_url,
+          watchers: repo.watchers_count,
+          lastUpdated: repo.updated_at
       }
-    })
+      promiseArray.push(Repo.findOneAndUpdate({repoID: repoObj.repoID}, repoObj, {upsert: true, new: true}).exec());
+    }
+    Promise.all(promiseArray).then((results)=> {
+      Repo.count().then((newCount)=> {
+        console.log('here is the updated count', newCount);
+        let newSize = newCount;
 
-  }
- 
-  Repo.find(function (err, repos) {
-    if (err) return console.error(err);
-    console.log('here are all the repos!', repos);
+        let reposAdded = newSize-oldSize;
+        let reposUpdated = APILength - reposAdded;
+        callback(reposAdded, reposUpdated);
+
+      })
+    })
+   
   })
+  
+
 
 }
 
@@ -71,11 +79,34 @@ let getRepos = (callback) => {
       callback(null, repos);
     }
   })
-  
-
 }
 
-// getRepos();
+let getSize = (callback) => {
+
+  Repo.count((err, count)=> {
+    if (err) {
+      console.log('err in db', err);
+      callback(err, null);
+    } else {
+      console.log('here is the total ct', count);
+      callback(null, count);
+    }
+  })
+}
+
+// async function getSize() {
+
+//   try {
+//     let count = await Repo.count();
+//     console.log('count', count);
+//     return count;
+//   } catch (err) {
+//     console.log('error', err)
+
+//   }
+
+// }
+
 
 
 var exampleRepo = 
@@ -193,3 +224,4 @@ var exampleRepo =
 
 module.exports.save = save;
 module.exports.getRepos = getRepos;
+module.exports.getSize = getSize;
