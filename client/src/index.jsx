@@ -69,7 +69,7 @@ class App extends React.Component {
     return (<div>
       <h1>GITHUB HIGH SCORES</h1>
       <RepoList repos={this.state.repos}/>
-      <Search className="search" onSearch={this.search.bind(this)}/>
+      <Search onSearch={this.search.bind(this)}/>
       <h2>Repos added: {this.state.totalAdded}</h2>
       <h2>Repos updated: {this.state.totalUpdated}</h2>
     </div>)
