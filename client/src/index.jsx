@@ -8,7 +8,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      repos: []
+      repos: [],
+      totalAdded:0,
+      totalUpdated: 0
     }
 
   }
@@ -25,9 +27,16 @@ class App extends React.Component {
       },
       method: 'POST'
     })
-    .then(response => {
+    .then(response =>  response.json())
+    .then((numbers)=> {
+      console.log('here are the numbers!!', numbers);
+      this.setState({
+        totalAdded: numbers[0],
+        totalUpdated: numbers[1]
+      });
       this.getRepos();
-    });
+    })
+    
   }
 
   componentDidMount(){
@@ -61,6 +70,8 @@ class App extends React.Component {
       <h1>Jenn's Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>
       <Search onSearch={this.search.bind(this)}/>
+      <h2>Repos added: {this.state.totalAdded}</h2>
+      <h2>Repos updated: {this.state.totalUpdated}</h2>
     </div>)
   }
 }
