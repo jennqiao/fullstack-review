@@ -1,4 +1,36 @@
 table {
-    margin: 15px;
     text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    margin: auto;
+
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 15px;
+    text-align: center;
+    background-image: url('background.jpg');
+    color: #c69115;
+}
+
+tr, th, td {
+    padding-top: 5px;
+}
+
+h1, h2, th, h4 {
+    color: #f7e922;
+}
+
+a {
+    color: #c69115;
+
+}
+
+.search {
+
+}
+
+button {
+    margin: 10px;
+    background-color: #c69115;
 }

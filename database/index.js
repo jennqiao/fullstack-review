@@ -31,10 +31,10 @@ let save = (repos, callback) => {
 
   //receive an array of objects
   let APILength = repos.length;
-
+  var oldSize;
   Repo.count().then((count)=> {
     console.log('here is the old count', count);
-    let oldSize = count;
+    oldSize = count;
     
     var promiseArray = [];
   
@@ -50,19 +50,22 @@ let save = (repos, callback) => {
       }
       promiseArray.push(Repo.findOneAndUpdate({repoID: repoObj.repoID}, repoObj, {upsert: true, new: true}).exec());
     }
-    Promise.all(promiseArray).then((results)=> {
-      Repo.count().then((newCount)=> {
-        console.log('here is the updated count', newCount);
-        let newSize = newCount;
+    return Promise.all(promiseArray);
 
-        let reposAdded = newSize-oldSize;
-        let reposUpdated = APILength - reposAdded;
-        callback(reposAdded, reposUpdated);
+    }).then((promise)=> {
+        console.log('here is the promise', promise);
+        return Repo.count();
+    }).then((newCount)=> {
+          console.log('here is the updated count', newCount);
+          let newSize = newCount;
 
-      })
+          let reposAdded = newSize-oldSize;
+          let reposUpdated = APILength - reposAdded;
+          callback(reposAdded, reposUpdated);
+    }).catch(err=> {
+      console.log('error', err);
     })
-   
-  })
+
   
 
 

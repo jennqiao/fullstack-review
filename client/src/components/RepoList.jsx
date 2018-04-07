@@ -3,14 +3,12 @@ import RepoRow from './RepoRow.jsx';
 
 const RepoList = ({repos}) => (
   <div>
-    <h4> Repo List </h4>
-    Here are the most watched repos.
     <table>
       <tbody>
       <tr>
-        <th>Repo Name</th>
-        <th>Username</th>
-        <th>Watch Count</th>
+        <th>REPO</th>
+        <th>PLAYER</th>
+        <th>POINTS</th>
       </tr>
     {
       repos.map((repo)=> {
